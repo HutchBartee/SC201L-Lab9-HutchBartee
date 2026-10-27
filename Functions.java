@@ -70,23 +70,30 @@ public class Functions {
             String line;
             reader.readLine(); // skip header
             while ((line = reader.readLine()) != null) {
-                String[] tokens = line.split(",");
-                try {
-                    Boolean accIsNum = isDigits(tokens[0]);
-                    Boolean accTypeIsValid = validType(tokens[1]);
-                    Boolean transTypeIsValid = validTransType(tokens[5]);
-                    int dateIsValid = validDate(tokens[4]);
-                    Boolean amountIsNum = isDigits(tokens[6]);
-
-                    if((accIsNum == true) && (accTypeIsValid == true) && (transTypeIsValid == true) && (dateIsValid == 1) && (amountIsNum == true)){
-                        System.out.println("test");
-                        //processAccount(Integer.parseInt(tokens[0]), tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], Integer.parseInt(tokens[6]), errorLog, accounts);
+                try{
+                    String[] tokens = line.split(",");
+                    if(tokens[5].equalsIgnoreCase("INTEREST")){
+                        processAccount(0, "null", "null", "null", tokens[4], tokens[5], 0, errorLog, accounts, line);
+                    }
+                    else if(tokens[5].equalsIgnoreCase("TRANSFER")){
+                        processAccount(Integer.parseInt(tokens[0]), tokens[1], "null", "null", tokens[4], tokens[5], Integer.parseInt(tokens[6]), errorLog, accounts, line);
                     }
                     else{
-                        System.out.println("fail");
+                        Boolean accIsNum = isDigits(tokens[0]);
+                        Boolean accTypeIsValid = validType(tokens[1]);
+                        Boolean transTypeIsValid = validTransType(tokens[5]);
+                        int dateIsValid = validDate(tokens[4]);
+                        Boolean amountIsNum = isDigits(tokens[6]);
+
+                        if((accIsNum == true) && (accTypeIsValid == true) && (transTypeIsValid == true) && (dateIsValid == 1) && (amountIsNum == true)){
+                            processAccount(Integer.parseInt(tokens[0]), tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], Integer.parseInt(tokens[6]), errorLog, accounts, line);
+                        }
+                        else{
+                            errWriter.println("Invalid input: " + line);
+                        }
                     }
                 } catch (Exception e) {
-                    errWriter.println("Parse error in record: " + line);
+                        errWriter.println("Parse error in record: " + line);
                 }
             }
         } catch (IOException e) {
@@ -95,14 +102,71 @@ public class Functions {
 
     }
 
-    public static void processAccount(int accNum, String accType, String fName, String lName, String date, String transType, int transAmount, String errorLog, ArrayList<BankAccount> accounts){
-        try{
+    public static void processAccount(int accNum, String accType, String fName, String lName, String date, String transType, int transAmount, String errorLog, ArrayList<BankAccount> accounts, String line){
+        try(PrintWriter errWriter = new PrintWriter(new FileWriter(errorLog))){
             if(transType.equalsIgnoreCase("NEW")){
-                //BankAccount i = new BankAccount(accNum, accType, fName, lName, date, transAmount, 0, 0);
-                //accounts.add(i);
+                if(accType.equalsIgnoreCase("C")){
+                    BankAccount i = new Checking(accNum, accType, fName, lName, date, 0, transAmount, 0);
+                    accounts.add(i);
+                }
+                else if(accType.equalsIgnoreCase("CD")){
+                    BankAccount i = new Certificate(accNum, accType, fName, lName, date, 0, transAmount, 0);
+                    accounts.add(i);
+                }
+                else if(accType.equalsIgnoreCase("S")){
+                    BankAccount i = new Savings(accNum, accType, fName, lName, date, 0, transAmount, 0);
+                    accounts.add(i);
+                }
+                else{
+                    errWriter.println("Incorrect account type: " + line);
+                }
+            }
+            else if(transType.equalsIgnoreCase("DEPOSIT")){
+                boolean exists = false;
+                for(BankAccount acc : accounts){
+                    if(accNum == acc.getAccountNumber()){
+                        acc.processDeposit(transAmount);
+                        exists = true;
+                    }
+                }
+                if(exists == false) errWriter.println("Account does not exist " + line);
+            }
+            else if(transType.equalsIgnoreCase("WITHDRAWAL")){
+                boolean exists = false;
+                for(BankAccount acc : accounts){
+                    if(accNum == acc.getAccountNumber()){
+                        acc.processWithdrawal(transAmount);
+                        exists = true;
+                    }
+                }
+                if(exists == false) errWriter.println("Account does not exist " + line);
+            }
+            else if(transType.equalsIgnoreCase("INTEREST")){
+                for(BankAccount acc : accounts){
+                    acc.processInterestEarned();
+                }
+            }
+            else if(transType.equalsIgnoreCase("TRANSFER")){
+                try{
+                    boolean exists = false;
+                    int accNum2 = Integer.parseInt(accType);
+                    for(BankAccount acc : accounts){
+                        for(BankAccount acc2 : accounts){
+                            if((accNum == acc.getAccountNumber()) && (accNum2 == acc2.getAccountNumber()) && (acc.getAccountBalance() >= transAmount)){
+                                acc.processWithdrawal(transAmount);
+                                acc2.processDeposit(transAmount);
+                                exists = true;
+                            }
+                        }
+                    }
+                    if(exists == false) errWriter.println("One account number does not exist: " + line);
+                }
+                catch(Exception e){ errWriter.println("Incorrect formatting " + line); }
             }
         }
-        finally{}
+        catch(IOException e){
+            System.out.println("Error reading file: " + e.getMessage());
+        }
     }
 
     //PRE:  none

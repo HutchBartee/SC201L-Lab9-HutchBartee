@@ -1,6 +1,3 @@
-Parse error in record: ,,,,6/5/2024,INTEREST,
-Parse error in record: ,,,,6/10/2024,INTEREST,
-Parse error in record: ,,,,6/15/2024,INTEREST,
-Parse error in record: ,,,,6/20/2024,INTEREST,
-Parse error in record: ,,,,6/25/2024,INTEREST,
-Parse error in record: ,,,,6/30/2024,INTEREST,
+Invalid input: 110,C,Bugs,Bunny,6/3/2024,DEPOSIT,125.5
+Invalid input: 118,C,Wiley,Coyote,6/5/2024,NEW,-100
+Invalid input: ,C,Bubba,Wubba,6/16/2024,NEW,915

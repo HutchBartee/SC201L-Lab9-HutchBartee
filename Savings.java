@@ -12,10 +12,10 @@ public class Savings extends BankAccount {
         public void processInterestEarned(){
                 double intAmount = 0.0;
                 if((this.accountBalance >= 100.00) && (this.accountBalance <= 999.99)){
-                intAmount = this.accountBalance * .05;
+                        intAmount = this.accountBalance * .05 / 73;
                 }
                 else if(this.accountBalance >= 1000.00){
-                intAmount = this.accountBalance * .75;
+                        intAmount = this.accountBalance * .075 / 73;
                 }
 
                 this.interestEarned += intAmount;

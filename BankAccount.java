@@ -44,6 +44,7 @@ public abstract class BankAccount {
     public String getAccountType() { return accountType; }
     public String getFirstName() { return firstName; }
     public String getLastName() { return lastName; }
+    public double getAccountBalance() { return accountBalance; }
 
 
     // Setters
