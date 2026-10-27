@@ -9,6 +9,10 @@ public class Checking extends BankAccount {
                                accountBalance, interestEarned);
                        }
     
-     //Create Override Functions for processInterestEarned 
-     
+    //Create Override Functions for processInterestEarned
+    @Override
+    public void processInterestEarned(){
+        this.interestEarned += 0;
+        this.accountBalance += 0;
+    }
 }

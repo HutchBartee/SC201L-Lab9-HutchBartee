@@ -23,8 +23,10 @@ public class Functions {
     //PRE:  accepts a string and verifies that it is valid
     //POST: if string is C, S or CD return true, otherwise return false
     public static boolean validType(String t){
-        //add logic here
-        return false;
+        if(t.equalsIgnoreCase("C") || t.equalsIgnoreCase("S") || t.equalsIgnoreCase("CD")){
+            return true;
+        }
+        else return false;
     }
 
     //PRE:  accepts a string and verifies that it is valid
@@ -70,9 +72,19 @@ public class Functions {
             while ((line = reader.readLine()) != null) {
                 String[] tokens = line.split(",");
                 try {
-                  
-                    //verify the tokens ensuring that data read is valid for the transaction before processing the command
+                    Boolean accIsNum = isDigits(tokens[0]);
+                    Boolean accTypeIsValid = validType(tokens[1]);
+                    Boolean transTypeIsValid = validTransType(tokens[5]);
+                    int dateIsValid = validDate(tokens[4]);
+                    Boolean amountIsNum = isDigits(tokens[6]);
 
+                    if((accIsNum == true) && (accTypeIsValid == true) && (transTypeIsValid == true) && (dateIsValid == 1) && (amountIsNum == true)){
+                        System.out.println("test");
+                        //processAccount(Integer.parseInt(tokens[0]), tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], Integer.parseInt(tokens[6]), errorLog, accounts);
+                    }
+                    else{
+                        System.out.println("fail");
+                    }
                 } catch (Exception e) {
                     errWriter.println("Parse error in record: " + line);
                 }
@@ -81,6 +93,16 @@ public class Functions {
             System.out.println("Error reading file: " + e.getMessage());
         }
 
+    }
+
+    public static void processAccount(int accNum, String accType, String fName, String lName, String date, String transType, int transAmount, String errorLog, ArrayList<BankAccount> accounts){
+        try{
+            if(transType.equalsIgnoreCase("NEW")){
+                //BankAccount i = new BankAccount(accNum, accType, fName, lName, date, transAmount, 0, 0);
+                //accounts.add(i);
+            }
+        }
+        finally{}
     }
 
     //PRE:  none

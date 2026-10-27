@@ -59,11 +59,12 @@ public abstract class BankAccount {
 
     public void processDeposit(int amt){
         //add logic for this function
-        
+        accountBalance += amt;
     }
 
     public void processWithdrawal(int amt){
         //add logic for this function
+        accountBalance -= amt;
        
     }
 

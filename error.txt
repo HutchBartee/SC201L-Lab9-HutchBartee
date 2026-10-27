@@ -1,0 +1,6 @@
+Parse error in record: ,,,,6/5/2024,INTEREST,
+Parse error in record: ,,,,6/10/2024,INTEREST,
+Parse error in record: ,,,,6/15/2024,INTEREST,
+Parse error in record: ,,,,6/20/2024,INTEREST,
+Parse error in record: ,,,,6/25/2024,INTEREST,
+Parse error in record: ,,,,6/30/2024,INTEREST,
